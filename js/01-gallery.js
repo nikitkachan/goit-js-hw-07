@@ -24,24 +24,25 @@ function renderImgEl (arr, container) {
 };
 
 function modalInstance(event) {
-  const instance = basicLightbox.create(`<img src="${event.target.dataset.source}" width="800" alt="${event.target.alt}" />`);
+  const instance = basicLightbox.create(`<img src="${event.target.dataset.source}" width="800" alt="${event.target.alt}" />`, {
+    onShow: (instance) => window.addEventListener("keydown", modalClose), 
+		onClose: (instance) => window.removeEventListener("keydown", modalClose),
+	});
   instance.show();
-  window.addEventListener("keydown", modalClose);
-  if (event.code === "Escape") {
-    modalClose();
-  };
-  function modalClose() {
-    instance.close();
-    window.removeEventListener("keydown", modalClose);
+  
+  function modalClose(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
   };
 };
 
 function handleClick (event) {
   event.preventDefault();
-  if (event.currentTarget === event.target) {
+  if (event.target.nodeName !==  "IMG") {
     return;
   };
-  
+
   modalInstance(event);
 }
 
